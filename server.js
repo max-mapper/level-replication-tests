@@ -1,13 +1,16 @@
 var WebSocketServer = require('ws').Server
 var http = require('http')
 var ecstatic = require('ecstatic')
+var websocket = require('websocket-stream')
+var MemDOWN = require('memdown')
+var levelup = require('levelup')
 var sublevel = require('level-sublevel')
 var replicate = require('level-replicate')
-var levelup = require('levelup')
-var websocket = require('websocket-stream')
 
+var factory = function (location) { return new MemDOWN(location) }
+var db = levelup('test', { db: factory })
 var server = http.createServer(ecstatic('./'))
-var db = sublevel(levelup('test.db')).sublevel('foo')
+var db = sublevel(db).sublevel('test')
 var wss = new WebSocketServer({ server: server })
 
 wss.on('connection', function(ws) {
@@ -17,4 +20,5 @@ wss.on('connection', function(ws) {
   stream.pipe(process.stdout)
 })
 
-server.listen(8080)
+server.listen(12985)
+console.log('open :12985')
