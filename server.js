@@ -13,6 +13,10 @@ var server = http.createServer(ecstatic('./'))
 var db = sublevel(db).sublevel('test')
 var wss = new WebSocketServer({ server: server })
 
+db.get('hello', function(err, d) {
+  console.log(err, d)
+})
+
 wss.on('connection', function(ws) {
   var replicator = replicate(db, 'master', "MASTER-1")
   var stream = websocket(ws)

@@ -8,16 +8,21 @@ var deleteRange = require('level-delete-range')
 var backend = 'ws://localhost:12985'
 var stream = websocket(backend)
 
-var db = sublevel(levelup('test', { db: leveljs })).sublevel('foo')
+var db = sublevel(levelup('test', {
+  db: leveljs,
+  valueEncoding: 'json'
+}))
 
-destroy(db, function() {
+destroy(db, function(err) {
+  if (err) console.log('destroy err', err)
   var replicator = replicate(db, 'master', "MASTER-2")
   stream.pipe(replicator.createStream({tail: true})).pipe(stream)
   stream.on('data', function(c) { console.log(c) })
-
   setTimeout(function() {
-    db.put('hello', new Int8Array(5), { valueEncoding: 'binary' })
-  }, 2000)
+    db.put('hello', new Uint8Array(5), {valueEncoding: 'binary'}, function(err) {
+      console.log('put done, err:', err)
+    })
+  }, 3000)
 })
 
 function destroy(subdb, cb) {
