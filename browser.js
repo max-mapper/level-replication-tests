@@ -12,7 +12,7 @@ var binary = {valueEncoding: 'binary'}
 
 var db = sublevel(levelup('test', {
   db: leveljs,
-  valueEncoding: 'json'
+  valueEncoding: 'binary'
 }))
 
 // multilevel to server to verify assertions
@@ -38,26 +38,11 @@ destroy(db, function(err) {
 function runTests() {
   var binVal = new Uint8Array(5)
   
-  tape.test('local to remote string value', function(t) {
-    db.put('yes', 'thisisdog', function(err) {
-      poll(function(next) {
-        remote.get('yes', function(err, val) {
-          if (err) return next(false, false)
-          next(err, val)
-        })
-      }, function(err, result) {
-        if (err) result = err
-        t.equals(result, 'thisisdog')
-        t.end()
-      })
-    })
-  })
-  
   tape.test('local to remote binary value', function(t) {
     db.put('hello', binVal, binary, function(err) {
+      t.equals(!!err, false)
       poll(function(next) {
         remote.get('hello', binary, function(err, val) {
-          console.log('polling...', err, val)
           if (err) return next(false, false)
           next(err, val)
         })
@@ -68,10 +53,25 @@ function runTests() {
       })
     })
   })
+  
+  tape.test('local delete triggers remote delete', function(t) {
+    db.del('hello', function(err) {
+      t.equals(!!err, false)
+      poll(function(next) {
+        remote.get('hello', function(err, val) {
+          if (!err || val) return next(false, false)
+          next(err, val)
+        })
+      }, function(err, result) {
+        t.equals(err.name, 'NotFoundError')
+        t.end()
+      })
+    })
+  })
 }
 
 function poll(check, cb, interval, startTime, timeOut) {
-  if (!timeOut) timeOut = 2000
+  if (!timeOut) timeOut = 3000
   if (startTime && (Date.now() - startTime > timeOut)) return cb('timeout')
   if (!startTime) startTime = Date.now()
   var result = check(function(err, result) {

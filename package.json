@@ -4,11 +4,11 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "browserify browser.js -o bundle.js && node server.js"
+    "test": "browserify browser.js -o bundle.js && node server.js"
   },
   "license": "BSD",
   "dependencies": {
-    "websocket-stream": "~0.2.0",
+    "websocket-stream": "~0.3.0",
     "ecstatic": "~0.4.5",
     "ws": "~0.4.27",
     "memdown": "~0.3.0",

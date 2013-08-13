@@ -12,8 +12,7 @@ var multilevel = require('multilevel')
 var factory = function (location) { return new MemDOWN(location) }
 var db = levelup('test', { db: factory })
 var server = http.createServer(ecstatic('./'))
-// var encoding = {valueEncoding: 'binary'}
-var encoding = undefined
+var encoding = {valueEncoding: 'binary'}
 var testDb = sublevel(db).sublevel('test', encoding)
 var wss = new WebSocketServer({ server: server })
 
