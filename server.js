@@ -6,25 +6,42 @@ var MemDOWN = require('memdown')
 var levelup = require('levelup')
 var sublevel = require('level-sublevel')
 var replicate = require('level-replicate')
+var deleteRange = require('level-delete-range')
+var multilevel = require('multilevel')
 
 var factory = function (location) { return new MemDOWN(location) }
 var db = levelup('test', { db: factory })
 var server = http.createServer(ecstatic('./'))
-var db = sublevel(db).sublevel('test', {valueEncoding: 'binary'})
+// var encoding = {valueEncoding: 'binary'}
+var encoding = undefined
+var testDb = sublevel(db).sublevel('test', encoding)
 var wss = new WebSocketServer({ server: server })
 
-db.get('hello', function(err, d) {
-  console.log(err, d)
-})
-
 wss.on('connection', function(ws) {
-  var replicator = replicate(db, 'master', "MASTER-1")
+  var path = ws.upgradeReq.url
   var stream = websocket(ws)
+  if (path === '/verify') {
+    var multilevelServer = multilevel.server(testDb)
+    stream.on('end', function() {
+      multilevelServer.destroy()
+    })
+    stream.pipe(multilevelServer).pipe(stream)
+    return
+  }
+  var replicator = replicate(testDb, 'master', "MASTER-1")
   stream.pipe(replicator.createStream({tail: true})).pipe(stream)
   stream.pipe(process.stdout)
 })
 
-db.post(console.log)
+testDb.post(console.log)
 
-server.listen(12985)
-console.log('open :12985')
+function destroy(subdb, cb) {
+  var prefix = subdb.prefix()
+  deleteRange(subdb, {start: prefix, end: prefix + '\xff\xff'}, cb)
+}
+
+destroy(testDb, function(err) {
+  if (err) console.log('destroy err', err)
+  server.listen(12985)
+  console.log('open :12985')
+})

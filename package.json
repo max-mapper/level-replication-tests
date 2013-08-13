@@ -16,6 +16,10 @@
     "level-sublevel": "~5.0.1",
     "level-replicate": "~1.1.6",
     "level-delete-range": "~0.1.0",
-    "level-js": "~1.0.8"
+    "level-js": "~1.0.8",
+    "multilevel": "~5.4.1"
+  },
+  "devDependencies": {
+    "tape": "~1.0.4"
   }
 }
