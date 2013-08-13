@@ -6,17 +6,18 @@ var websocket = require('websocket-stream')
 var deleteRange = require('level-delete-range')
 
 var backend = 'ws://localhost:12985'
-var stream = websocket(backend)
 
-var db = sublevel(levelup('test', { db: leveljs })).sublevel('foo')
+var db = sublevel(levelup('test', { db: leveljs })).sublevel('foo', {valueEncoding: 'binary'})
 
 destroy(db, function() {
-  var replicator = replicate(db, 'master', "MASTER-2")
-  stream.pipe(replicator.createStream({tail: true})).pipe(stream)
+  var stream = websocket(backend)
   stream.on('data', function(c) { console.log(c) })
 
+  var replicator = replicate(db, 'master', "MASTER-2")
+  stream.pipe(replicator.createStream({tail: true})).pipe(stream)
+
   setTimeout(function() {
-    db.put('hello', new Int8Array(5), { valueEncoding: 'binary' })
+    db.put('hello', new Uint8Array(5), { valueEncoding: 'binary' })
   }, 2000)
 })
 

@@ -10,7 +10,7 @@ var replicate = require('level-replicate')
 var factory = function (location) { return new MemDOWN(location) }
 var db = levelup('test', { db: factory })
 var server = http.createServer(ecstatic('./'))
-var db = sublevel(db).sublevel('test')
+var db = sublevel(db).sublevel('test', {valueEncoding: 'binary'})
 var wss = new WebSocketServer({ server: server })
 
 wss.on('connection', function(ws) {
@@ -19,6 +19,8 @@ wss.on('connection', function(ws) {
   stream.pipe(replicator.createStream({tail: true})).pipe(stream)
   stream.pipe(process.stdout)
 })
+
+db.post(console.log)
 
 server.listen(12985)
 console.log('open :12985')
