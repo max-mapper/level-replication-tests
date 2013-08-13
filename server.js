@@ -43,5 +43,5 @@ function destroy(subdb, cb) {
 destroy(testDb, function(err) {
   if (err) console.log('destroy err', err)
   server.listen(12985)
-  console.log('open :12985')
+  console.log('open :12985, view console')
 })
