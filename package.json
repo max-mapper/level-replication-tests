@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "browserify browser.js -o bundle.js && node server.js"
+    "test": "browserify tests.js -o bundle.js && node server.js",
+    "bench": "browserify benchmark.js -o bundle.js && node server.js"
   },
   "license": "BSD",
   "dependencies": {
@@ -17,7 +18,8 @@
     "level-replicate": "~1.1.6",
     "level-delete-range": "~0.1.0",
     "level-js": "~1.0.8",
-    "multilevel": "~5.4.1"
+    "multilevel": "~5.4.1",
+    "hat": "0.0.3"
   },
   "devDependencies": {
     "tape": "~1.0.4"
