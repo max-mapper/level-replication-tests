@@ -1,6 +1,6 @@
+currently tests level-replicate with msgpack transport over a binary websocket
+
 ```
 npm install
-npm start
+npm test
 ```
-
-currently broken until modules get fixed to interoperate with the browser correctly

@@ -5,7 +5,7 @@ var websocket = require('websocket-stream')
 var MemDOWN = require('memdown')
 var levelup = require('levelup')
 var sublevel = require('level-sublevel')
-var replicate = require('level-replicate')
+var replicate = require('level-replicate/msgpack')
 var deleteRange = require('level-delete-range')
 var multilevel = require('multilevel')
 
