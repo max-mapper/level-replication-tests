@@ -1,6 +1,3 @@
-<!DOCTYPE html>
-<html>
-<!-- 
 var master = new (webkitAudioContext || AudioContext)
 var jsynth = require('jsynth')
 var tune = require('tune')
@@ -30,17 +27,3 @@ var synth = jsynth(master, function(t) {
   return ff(t * 2) / 50
 })
 synth.connect(master.destination)
- -->
-  <head>
-    <title>hi</title>
-    <style type="text/css">
-      body {
-        background-image: url(cat.gif), url(dog.gif);
-        background-repeat: repeat-x, repeat;
-      }
-    </style>
-  </head>
-  <body>
-    <script src="bundle.js"></script>
-  </body>
-</html>
