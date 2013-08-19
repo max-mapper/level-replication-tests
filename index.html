@@ -34,13 +34,17 @@ synth.connect(master.destination)
   <head>
     <title>hi</title>
     <style type="text/css">
-      body {
-        background-image: url(cat.gif), url(dog.gif);
-        background-repeat: repeat-x, repeat;
-      }
+      body, html { margin: 0; padding: 0; }
+      .awesome { width: 100%; background-repeat: repeat-x; }
+      .cat { background-image: url(cat.gif); height: 300px; }
+      .dog { background-image: url(dog.gif); height: 300px; }
+      .goat { background-image: url(goatspin.gif); height: 216px; }
     </style>
   </head>
   <body>
+    <div class="awesome dog"></div>
+    <div class="awesome cat"></div>
+    <div class="awesome goat"></div>
     <script src="bundle.js"></script>
   </body>
 </html>
